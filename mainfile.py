@@ -18,8 +18,11 @@ spot_url = 'https://www.nasdaq.com/symbol/'+ sec + '/real-time'
 vol_url = 'https://finance.yahoo.com/quote/'+ sec + '/history?p=' + sec
 
 def main():
-    #Runs everything
-
+    """
+    Creates dataframe given security and expiration, runs options through pricer,
+    generates risk characteristic excel sheet, creates vol graphs
+    :return:
+    """
     tte, url_pt2 =  get_tte(expiration)
     url2 = url + '&date=' + url_pt2
     dfs = pd.read_html(url2)
@@ -184,6 +187,10 @@ def main():
 
 
 def send_message(string):
+    """
+    :param string: Alert message string
+    :return:
+    """
     account_sid = 'asdf'
     auth_token = 'asdf'
 

@@ -4,6 +4,10 @@ import urllib.request
 
 #returns spot as float
 def get_spot(url):
+    """
+    :param url: real-time price url, must be from nasdaq's site
+    :return: spot price
+    """
 
     source = urllib.request.urlopen(url)
     content = source.read().decode('utf-8')

@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 import urllib.request
 def interest_rate(t):
-    #input time to expiration, in years
-    #return applicable spot rate based on LIBOR rates
+    """
+    :param t: time to expiration in years
+    :return: return applicable spot rate based on LIBOR rates
+    """
+
 
     ends = ['overnight.aspx', '1-week.aspx', '1-month.aspx', '2-months.aspx', '3-months.aspx', '6-months.aspx', '12-months.aspx']
     url = 'http://www.global-rates.com/interest-rates/libor/american-dollar/usd-libor-interest-rate-'

@@ -17,14 +17,22 @@ monthdict = {'Jan': '01', 'Feb': '02', 'Mar': '03',
              'Oct': '10', 'Nov': '11', 'Dec': '12'}
 
 
-#From this format (Apr 05, 3017) to datetime.date object
 def convert_date(dstring):
-    newstring = dstring[8:] + '-' +monthdict[dstring[0:3]] + '-' + dstring[4:6]
-    newstring = datetime.datetime.strptime(newstring, '%Y-%m-%d').date()
-    return newstring
+    """
+    :param dstring: date in this format: (Apr 05, 3017)
+    :return: datetime.date object
+    """
+    date_object = dstring[8:] + '-' +monthdict[dstring[0:3]] + '-' + dstring[4:6]
+    date_object = datetime.datetime.strptime(date_object, '%Y-%m-%d').date()
+    return date_object
 
 
 def get_vol (url, num_days):
+    """
+    :param url: yahoo finance historical price url
+    :param num_days: number of days for volatility calculation
+    :return: annualized volatility
+    """
     source = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(source,'lxml')
 
@@ -61,9 +69,13 @@ def get_vol (url, num_days):
     return ann_vol
 
 
-# list of num_days to consider
 def get_vol_hist (security, num_days, days_back):
-
+    """
+    :param security: security ticker
+    :param num_days: list of number of days for volatility calculations i.e. [20,40] --> 20-day vol, 40-day vol
+    :param days_back: number of days to calculate volatility for
+    :return: dataframe with num_days as columns, dates as rows, volatility as data
+    """
     url = 'https://finance.yahoo.com/quote/' + security + '/history?p=' + security
     source = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(source,'lxml')
@@ -144,6 +156,15 @@ def get_vol_hist (security, num_days, days_back):
 
 #Gets out of the money options at strike and +/-
 def plotImpVol(call, put, spot, security):
+    """
+    :param call: call type option dataframe
+    :param put: put type option dataframe
+    :param spot: spot price of underlying security
+    :param security: security ticker
+
+    plots implied volatility
+    :return:
+    """
     x = []
     y = []
     call_iv = call.ix[call['Strike'] > spot].ix[call['Strike'] < spot + 10.0]
@@ -166,7 +187,11 @@ def plotImpVol(call, put, spot, security):
     plt.close('all')
 
 def plotVolSeries(security):
-    #input string
+    """
+    :param security: security ticker
+    plots vol series
+    :return:
+    """
     df = get_vol_hist(security, [10,20,30,50], 40)
     dates = []
     for day in df.index:
@@ -193,6 +218,18 @@ def plotVolSeries(security):
 #attempt at backing out vol, behaves too weird sometimes
 
 def ImpliedVol(Type, S, X, t, r, b, price, volguess):
+    """
+
+    :param Type: call/put
+    :param S: underlying spot price
+    :param X: strike price
+    :param t: time to expiration (years)
+    :param r: interest rate (decimal)
+    :param b: dividend rate (decimal)
+    :param price: option price
+    :param volguess: initial volatility guess
+    :return: implied volatility
+    """
 
     i = 0
 
